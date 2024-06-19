@@ -1,0 +1,10 @@
+llm/data/MINIDEV_mysql/BIRD_dev.sql filter=lfs diff=lfs merge=lfs -text
+llm/data/MINIDEV_postgresql/BIRD_dev.sql filter=lfs diff=lfs merge=lfs -text
+llm/data/dev_databases/european_football_2/european_football_2.sqlite filter=lfs diff=lfs merge=lfs -text
+llm/data/dev_databases/codebase_community/codebase_community.sqlite filter=lfs diff=lfs merge=lfs -text
+llm/data/dev_databases/card_games/card_games.sqlite filter=lfs diff=lfs merge=lfs -text
+sqlite/MINIDEV_mysql/BIRD_dev.sql filter=lfs diff=lfs merge=lfs -text
+sqlite/MINIDEV_postgresql/BIRD_dev.sql filter=lfs diff=lfs merge=lfs -text
+sqlite/dev_databases/european_football_2/european_football_2.sqlite filter=lfs diff=lfs merge=lfs -text
+sqlite/dev_databases/codebase_community/codebase_community.sqlite filter=lfs diff=lfs merge=lfs -text
+sqlite/dev_databases/card_games/card_games.sqlite filter=lfs diff=lfs merge=lfs -text
