@@ -2,7 +2,7 @@
 import argparse
 import json
 import os
-from openai import AzureOpenAI
+from openai import OpenAI
 from tqdm import tqdm
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -11,9 +11,9 @@ import concurrent.futures
 from prompt import generate_combined_prompts_one
 
 
-"""openai configure"""
-api_version = "2024-02-01"
-api_base = "https://gcrendpoint.azurewebsites.net"
+# """openai configure"""
+# api_version = "2024-02-01"
+# api_base = "https://gcrendpoint.azurewebsites.net"
 
 
 def new_directory(path):
@@ -21,7 +21,7 @@ def new_directory(path):
         os.makedirs(path)
 
 
-def connect_gpt(engine, prompt, max_tokens, temperature, stop, client):
+def old_connect_gpt(engine, prompt, max_tokens, temperature, stop, client):
     """
     Function to connect to the GPT API and get the response.
     """
@@ -57,6 +57,31 @@ def connect_gpt(engine, prompt, max_tokens, temperature, stop, client):
             time.sleep(4)
     return result
 
+def connect_gpt(engine, prompt, max_tokens, temperature, stop, client):
+    """
+    Function to connect to the GPT API and get the response.
+    """
+    MAX_API_RETRY = 2
+    for i in range(MAX_API_RETRY):
+        time.sleep(2)
+        try:
+            messages = [
+                    {"role": "user", "content": prompt},
+                ]
+            #print(messages)
+            result = client.chat.completions.create(model=engine, messages=messages)
+            print(result)
+            #result = result.choices[0].message.content
+            #print("Output Content: ",result)
+            break
+        except Exception as e:
+            print("Iam Here IN CONNECT GPT")
+            result = "error:{}".format(e)
+            print("THis is where the issue is !!")
+            print(result)
+            time.sleep(4)
+    return result
+
 
 def decouple_question_schema(datasets, db_root_path):
     question_list = []
@@ -88,16 +113,15 @@ def generate_sql_file(sql_lst, output_path=None):
     return result
 
 
-def init_client(api_key, api_version, engine):
+def init_client(api_url, engine):
     """
     Initialize the AzureOpenAI client for a worker.
     """
-    return AzureOpenAI(
-        api_key=api_key,
-        api_version=api_version,
-        base_url=f"{api_base}/openai/deployments/{engine}",
+    return OpenAI(
+        api_key="None",
+        base_url="http://127.0.0.1:8080/v1",
+        # model=engine
     )
-
 
 def post_process_response(response, db_path):
     sql = response if isinstance(response, str) else response.choices[0].message.content
@@ -130,7 +154,7 @@ def collect_response_from_gpt(
     """
     Collect responses from GPT using multiple threads.
     """
-    client = init_client(api_key, api_version, engine)
+    client = init_client(api_key,  engine)
 
     tasks = [
         (
@@ -169,7 +193,7 @@ if __name__ == "__main__":
     args_parser.add_argument("--db_root_path", type=str, default="")
     args_parser.add_argument("--api_key", type=str, required=True)
     args_parser.add_argument(
-        "--engine", type=str, required=True, default="code-davinci-002"
+        "--engine", type=str, required=True, default="Qwen3-Coder-30B-A3B-Instruct-UD-Q8_K_XL"
     )
     args_parser.add_argument("--data_output_path", type=str)
     args_parser.add_argument("--chain_of_thought", type=str)

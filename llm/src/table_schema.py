@@ -161,12 +161,12 @@ def connect_mysql():
     # Open database connection
     # Connect to the database"
     db = pymysql.connect(
-        host="localhost",
-        user="root",
-        password="YOUR_PASSWORD",
+        host="127.0.0.1",
+        user="bird_user",
+        password="password",
         database="BIRD",
-        unix_socket="/tmp/mysql.sock",
-        # port=3306,
+        #unix_socket="/tmp/mysql.sock",
+        port=3307,
     )
     return db
 
