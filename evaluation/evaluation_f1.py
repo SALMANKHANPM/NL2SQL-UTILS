@@ -3,7 +3,7 @@ import argparse
 import multiprocessing as mp
 from func_timeout import func_timeout, FunctionTimedOut
 from evaluation_utils import (
-    load_jsonl,
+    load_json_data,
     execute_sql,
     package_sqls,
     sort_results,
@@ -61,8 +61,8 @@ def calculate_f1_score(predicted, ground_truth):
     ground_truth_set = set(ground_truth)
 
     # convert back to list
-    predicted = list(dict.fromkeys(predicted))
-    ground_truth = list(dict.fromkeys(ground_truth))
+    predicted = list(predicted_set)
+    ground_truth = list(ground_truth_set)
 
     # Calculate matching scores for each possible pair
     match_scores = []
@@ -123,10 +123,10 @@ def execute_model(
     except KeyboardInterrupt:
         sys.exit(0)
     except FunctionTimedOut:
-        result = [(f"timeout",)]
+        result = [("timeout",)]
         res = 0
-    except Exception as e:
-        result = [(f"error",)]  # possibly len(query) > 512 or not executable
+    except Exception:
+        result = [("error",)]  # possibly len(query) > 512 or not executable
         res = 0
     # print(result)
     # result = str(set([ret[0] for ret in result]))
@@ -161,7 +161,7 @@ def run_sqls_parallel(
 def compute_f1_by_diff(exec_results, diff_json_path):
     num_queries = len(exec_results)
     results = [res["res"] for res in exec_results]
-    contents = load_jsonl(diff_json_path)
+    contents = load_json_data(diff_json_path)
     simple_results, moderate_results, challenging_results = [], [], []
 
     for i, content in enumerate(contents):
@@ -218,7 +218,9 @@ if __name__ == "__main__":
     exec_result = []
 
     pred_queries, db_paths = package_sqls(
-        args.predicted_sql_path, args.db_root_path, mode="pred"
+        args.predicted_sql_path,
+        args.db_root_path,
+        mode='pred'
     )
     # generate ground truth sqls:
     gt_queries, db_paths_gt = package_sqls(
@@ -243,9 +245,7 @@ if __name__ == "__main__":
         exec_result, args.diff_json_path
     )
     score_lists = [simple_acc, moderate_acc, challenging_acc, acc]
-    print_data(
-        score_lists, count_lists, metric="Soft-F1", result_log_file=args.output_log_path
-    )
+    print_data(score_lists, count_lists,metric='Soft-F1',result_log_file=args.output_log_path)
     print(
         "==========================================================================================="
     )
