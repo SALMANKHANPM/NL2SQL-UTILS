@@ -5,7 +5,7 @@ meta_time_out=30.0
 # DO NOT CHANGE THIS
 
 # ************************* #
-predicted_sql_path='../mysql/predict_mini_dev_Qwen3-Coder-30B-A3B-Instruct-UD-Q8_K_XL_cot_MySQL.json' # Replace with your predict sql json path
+predicted_sql_path='../mysql/predict_mini_dev_gpt-oss-20b-GGUF-Q8_K_XL_cot_MySQL.json' # Replace with your predict sql json path
 # predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_PostgreSQL.json' # Replace with your predict sql json path
 # predicted_sql_path='../sql_result/predict_mini_dev_gpt-4-32k_cot_MySQL.json' # Replace with your predict sql json path
 
