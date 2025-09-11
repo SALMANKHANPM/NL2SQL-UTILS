@@ -9,8 +9,9 @@ YOUR_API_KEY='None'
 
 # Choose the engine to run, e.g. gpt-4, gpt-4-32k, gpt-4-turbo, gpt-35-turbo, GPT35-turbo-instruct
 #engine="Qwen-2.5-coder-Arctic-ExCoT-32B-GGUF-Q4_K_M"
-#engine="GPT-OSS-20B-VLLM-mxfp4"
-engine="openai/gpt-oss-20b"
+engine=""
+engine="gpt-oss-20b-High-Reasoning-GGUF-Q4_K_M"
+
 
 # Choose the number of threads to run in parallel, 1 for single thread
 num_threads=1
@@ -25,6 +26,6 @@ data_output_path='./exp_result/turbo_output/'
 data_kg_output_path='./exp_result/turbo_output_kg/'
 
 echo "generate $engine batch, run in $num_threads threads, with knowledge: $use_knowledge, with chain of thought: $cot"
-python -u ./src/gpt_request.py --db_root_path ${db_root_path} --api_key ${YOUR_API_KEY} --mode ${mode} \
+python -u ./src/qwen_test_gpu_request.py --db_root_path ${db_root_path} --api_key ${YOUR_API_KEY} --mode ${mode} \
 --engine ${engine} --eval_path ${eval_path} --data_output_path ${data_kg_output_path} --use_knowledge ${use_knowledge} \
 --chain_of_thought ${cot} --num_process ${num_threads} --sql_dialect ${sql_dialect}

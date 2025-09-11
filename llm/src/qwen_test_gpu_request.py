@@ -67,17 +67,14 @@ def connect_gpt(engine, prompt, max_tokens, temperature, stop, client):
     """
     MAX_API_RETRY = 2
     for i in range(MAX_API_RETRY):
-        #time.sleep(2)
-       # current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        #print(f"{current_time} - Attempt {i+1} to connect to GPT engine")
+       
         try:
-           # print("Engine: ", engine, "\n", "Setting reasoning effort to medium")
-            if engine == "Qwen3-32B-No-Think-GGUF:Q4_K_M":
-                prompt = prompt + "/no_think"
+            #print("Engine: ", engine, "\n", "Setting reasoning effort to medium")
+            if engine == "Qwen3-30B-A3B-Thinking-2507-GGUF-Q8_K_XL":
                 messages = [
                         {"role": "user", "content": prompt},
                     ]
-                result = client.chat.completions.create(model=engine, messages=messages)
+                result = client.chat.completions.create(model=engine, messages=messages, reasoning_effort="medium")
                 print(result)
 
             else:
@@ -89,7 +86,6 @@ def connect_gpt(engine, prompt, max_tokens, temperature, stop, client):
                 print(result)
                 #result = result.choices[0].message.content
                 #print("Output Content: ",result)
-        
             break
         except Exception as e:
             print("Iam Here IN CONNECT GPT")
@@ -97,7 +93,6 @@ def connect_gpt(engine, prompt, max_tokens, temperature, stop, client):
             print("THis is where the issue is !!")
             print(result)
             time.sleep(4)
-
     return result
 
 
@@ -138,7 +133,6 @@ def init_client(api_url, engine):
     return OpenAI(
         api_key="None",
         base_url="http://192.168.168.51:8080/v1",
-        #base_url="http://127.0.0.1:8080/v1",
         # model=engine
     )
 
